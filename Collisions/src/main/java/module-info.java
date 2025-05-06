@@ -4,4 +4,5 @@ module Collisions {
     requires Common;
 
     provides IPostEntityProcessingService with collisions.CollisionDetector;
+    uses common.asteroid.IAsteroidSplitter;
 }

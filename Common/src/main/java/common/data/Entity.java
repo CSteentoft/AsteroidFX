@@ -1,6 +1,8 @@
 package common.data;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class Entity implements Serializable {
@@ -12,6 +14,8 @@ public class Entity implements Serializable {
     private double y;
     private double rotation;
     private float radius;
+    private String type;
+    private final Map<Class<?>, Object> components = new HashMap<>();
 
     public String getID() {
         return ID.toString();
@@ -56,4 +60,29 @@ public class Entity implements Serializable {
     public float getRadius() {
         return radius;
     }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+    public String getType() {
+        return type;
+    }
+
+    public <T> void addComponent(T component) {
+        components.put(component.getClass(), component);
+    }
+
+    public <T> T getComponent(Class<T> component) {
+        return component.cast(components.get(component));
+    }
+
+    public <T> void removeComponent(Class<T> clazz) {
+        components.remove(clazz);
+    }
+
+    public <T> boolean hasComponent(Class<T> clazz) {
+        return components.containsKey(clazz);
+    }
+
+
 }

@@ -2,6 +2,7 @@ package player.plugins;
 
 import common.data.Entity;
 import common.data.GameData;
+import common.data.Health;
 import common.data.World;
 import common.services.IGamePluginService;
 import player.components.PlayerComponent;
@@ -15,6 +16,8 @@ public class PlayerPlugin implements IGamePluginService {
     @Override
     public void start(GameData gameData, World world) {
         player = createPlayerShip(gameData);
+        player.setType("Player");
+        player.addComponent(new Health(3));
         world.addEntity(player);
     }
 
