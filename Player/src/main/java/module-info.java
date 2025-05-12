@@ -6,4 +6,9 @@ module Player {
     provides IGamePluginService with player.plugins.PlayerPlugin;
     provides IEntityProcessingService with player.systems.PlayerControlSystem;
     uses common.bullet.BulletSPI;
+
+    //Testing
+    exports player.plugins;
+    exports player.systems;
+    exports player.components;
 }

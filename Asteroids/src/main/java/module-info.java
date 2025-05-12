@@ -5,7 +5,6 @@ import common.asteroid.IAsteroidSplitter;
 
 module Asteroids {
     requires Common;
-    provides IGamePluginService with asteroid.plugins.AsteroidPlugin;
-    provides IEntityProcessingService with asteroid.systems.AsteroidProcessor;
+    provides IEntityProcessingService with asteroid.systems.AsteroidProcessor, asteroid.systems.AsteroidSpawnSystem;
     provides IAsteroidSplitter with asteroid.systems.AsteroidSplitterImplementation;
 }
