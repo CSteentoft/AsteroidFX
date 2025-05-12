@@ -16,8 +16,13 @@ public class CollisionDetector implements IPostEntityProcessingService {
     private final IAsteroidSplitter asteroidSplitter;
 
     public CollisionDetector() {
-        this.asteroidSplitter = ServiceLoader.load(IAsteroidSplitter.class).findFirst().orElseThrow(() -> new IllegalStateException("No IAsteroidSplitter found on classpath"));
+        IAsteroidSplitter found = ServiceLoader.load(IAsteroidSplitter.class).findFirst().orElse(null);
 
+        if (found != null) {
+            this.asteroidSplitter = found;
+        } else {
+            this.asteroidSplitter = (original, world) -> { };
+        }
     }
 
     @Override
