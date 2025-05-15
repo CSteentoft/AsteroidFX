@@ -81,21 +81,25 @@ public class CollisionDetector implements IPostEntityProcessingService {
         }
         if (entity1Type.equals("Bullet") && entity2Type.equals("Player")) {
             //Player hit by bullet, and loses 1 hp per hit, health starts at 3
+            world.removeEntity(entity1);
             damage(entity2, world);
             return;
         }
         if (entity1Type.equals("Player") && entity2Type.equals("Bullet")) {
             //Player hit by bullet, and loses 1 hp per hit, health starts at 3
+            world.removeEntity(entity2);
             damage(entity1, world);
             return;
         }
         if (entity1Type.equals("Bullet") && entity2Type.equals("Enemy")) {
             //Enemy hit by bullet, and loses 1 hp per hit, health starts at 3
+            world.removeEntity(entity1);
             damage(entity2, world);
             return;
         }
         if (entity1Type.equals("Enemy") && entity2Type.equals("Bullet")) {
             //Enemy hit by bullet, and loses 1 hp per hit, health starts at 3
+            world.removeEntity(entity2);
             damage(entity1, world);
             return;
         }
@@ -121,7 +125,7 @@ public class CollisionDetector implements IPostEntityProcessingService {
     }
 
     private void splitAndRemoveAsteroid(Entity asteroid, World world) {
-        asteroidSplitter.createSplitAsteroid(asteroid, world);
+        asteroidSplitter.SplitAsteroid(asteroid, world);
         world.removeEntity(asteroid);
     }
 
@@ -132,8 +136,6 @@ public class CollisionDetector implements IPostEntityProcessingService {
             if (health.getHealth() <= 0) {
                 world.removeEntity(target);
             }
-        } else {
-            world.removeEntity(target);
         }
     }
 }

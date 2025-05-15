@@ -15,7 +15,7 @@ public class AsteroidSplitterImplementation implements IAsteroidSplitter {
     private final Random random = new Random();
 
     @Override
-    public void createSplitAsteroid(Entity original, World world) {
+    public void SplitAsteroid(Entity original, World world) {
 
         double x = original.getX();
         double y = original.getY();

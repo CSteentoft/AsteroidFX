@@ -5,8 +5,8 @@ module Core {
     requires spring.context;
     requires spring.core;
     requires spring.beans;
-    opens core to javafx.graphics, spring.core;
-    uses common.services.IPostEntityProcessingService;
+    opens core to spring.core, spring.beans, spring.context, javafx.graphics;
     uses common.services.IEntityProcessingService;
+    uses common.services.IPostEntityProcessingService;
     uses common.services.IGamePluginService;
 }

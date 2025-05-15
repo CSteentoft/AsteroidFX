@@ -13,7 +13,7 @@ public class Main extends Application {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ModuleConfig.class);
 
         for (String beanName : context.getBeanDefinitionNames()) {
-            System.out.println(beanName);
+            System.out.println("Loaded bean: " + beanName);
         }
 
         Game game = context.getBean(Game.class);

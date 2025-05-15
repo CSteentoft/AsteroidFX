@@ -1,5 +1,4 @@
 module Common {
-    exports common.util;
     exports common.data;
     exports common.services;
     exports common.bullet;
