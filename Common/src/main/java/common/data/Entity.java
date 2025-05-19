@@ -83,6 +83,4 @@ public class Entity implements Serializable {
     public <T> boolean hasComponent(Class<T> clazz) {
         return components.containsKey(clazz);
     }
-
-
 }

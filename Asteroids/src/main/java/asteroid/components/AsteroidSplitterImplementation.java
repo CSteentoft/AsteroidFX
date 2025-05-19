@@ -1,5 +1,5 @@
 // src/main/java/asteroid/systems/AsteroidSplitterImplementation.java
-package asteroid.systems;
+package asteroid.components;
 
 import common.asteroid.Asteroid;
 import common.asteroid.IAsteroidSplitter;
