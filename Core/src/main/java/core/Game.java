@@ -9,12 +9,18 @@ import common.services.IGamePluginService;
 import common.services.IPostEntityProcessingService;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,6 +45,17 @@ class Game {
         Text text = new Text(10, 20, "Destroyed asteroids: 0");
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         gameWindow.getChildren().add(text);
+
+        Image bgGif = new Image(getClass().getResource("/assets/images/space.gif").toExternalForm());
+
+        ImageView bgView = new ImageView(bgGif);
+
+        bgView.setFitWidth(gameData.getDisplayWidth());
+        bgView.setFitHeight(gameData.getDisplayHeight());
+        bgView.setPreserveRatio(false);
+
+
+        gameWindow.getChildren().add(0, bgView);
 
         Scene scene = new Scene(gameWindow);
         scene.setOnKeyPressed(event -> {
@@ -106,11 +123,11 @@ class Game {
     }
 
     private void draw() {
-        for (Entity polygonEntity : polygons.keySet()) {
+
+        for (Entity polygonEntity : new ArrayList<>(polygons.keySet())) {
             if (!world.getEntities().contains(polygonEntity)) {
-                Polygon removedPolygon = polygons.get(polygonEntity);
-                polygons.remove(polygonEntity);
-                gameWindow.getChildren().remove(removedPolygon);
+                Polygon removed = polygons.remove(polygonEntity);
+                gameWindow.getChildren().remove(removed);
             }
         }
 
@@ -121,12 +138,36 @@ class Game {
                 polygons.put(entity, polygon);
                 gameWindow.getChildren().add(polygon);
             }
+
+            switch (entity.getType()) {
+                case "Enemy":
+                    polygon.setFill(Color.RED);
+                    polygon.setStroke(Color.DARKRED);
+                    break;
+                case "Player":
+                    polygon.setFill(Color.GREEN);
+                    polygon.setStroke(Color.DARKGREEN);
+                    break;
+                case "Asteroid":
+                    polygon.setFill(Color.DARKGRAY);
+                    polygon.setStroke(Color.WHITE);
+                    break;
+                case "Bullet":
+                    polygon.setFill(Color.RED);
+                    polygon.setStroke(Color.RED);
+                    break;
+                default:
+                    polygon.setFill(Color.BLACK);
+                    polygon.setStroke(Color.WHITE);
+                    break;
+            }
+
             polygon.setTranslateX(entity.getX());
             polygon.setTranslateY(entity.getY());
             polygon.setRotate(entity.getRotation());
         }
-
     }
+
 
     public List<IGamePluginService> getGamePluginServices() {
         return gamePluginServices;

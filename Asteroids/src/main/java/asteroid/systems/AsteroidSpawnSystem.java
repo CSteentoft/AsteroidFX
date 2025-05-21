@@ -28,7 +28,7 @@ public class AsteroidSpawnSystem implements IEntityProcessingService {
         Entity a = new Asteroid();
         a.setType("Asteroid");
 
-        int baseSize = rnd.nextInt(30) + 5;
+        int baseSize = rnd.nextInt(40) + 20;
         int edges    = 5;
         double[] coords = new double[edges * 2];
         for (int i = 0; i < edges; i++) {

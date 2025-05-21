@@ -1,4 +1,3 @@
-// src/main/java/asteroid/systems/AsteroidSplitterImplementation.java
 package asteroid.systems;
 
 import common.asteroid.Asteroid;
@@ -10,7 +9,7 @@ import java.util.Random;
 
 public class AsteroidSplitterImplementation implements IAsteroidSplitter {
 
-    private float minRadius = 15f;
+    private float minRadius = 18f;
     private int edges = 5;
     private final Random random = new Random();
 
