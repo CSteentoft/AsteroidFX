@@ -5,6 +5,7 @@ import common.data.Entity;
 import common.data.GameData;
 import common.data.Health;
 import common.data.World;
+import common.scoringSystem.ScoringLocator;
 import common.services.IPostEntityProcessingService;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.ServiceLoader;
 public class CollisionDetector implements IPostEntityProcessingService {
 
     private final IAsteroidSplitter asteroidSplitter;
+
 
     public CollisionDetector() {
         IAsteroidSplitter found = ServiceLoader.load(IAsteroidSplitter.class).findFirst().orElse(null);
@@ -67,38 +69,54 @@ public class CollisionDetector implements IPostEntityProcessingService {
             world.removeEntity(entity2);
             return;
         }
-        if (entity1Type.equals("Bullet") && entity2Type.equals("Asteroid")) {
+        if (entity1Type.equals("PlayerBullet") && entity2Type.equals("Asteroid")) {
+            //Asteroid hit by bullet, removes bullet and splits asteroid into two.
+            award(1);
+            world.removeEntity(entity1);
+            splitAndRemoveAsteroid(entity2, world);
+            return;
+        }
+        if (entity1Type.equals("Asteroid") && entity2Type.equals("PlayerBullet")) {
+            //Asteroid hit by bullet, removes bullet and splits asteroid into two.
+            award(1);
+            world.removeEntity(entity2);
+            splitAndRemoveAsteroid(entity1, world);
+            return;
+        }
+        if (entity1Type.equals("EnemyBullet") && entity2Type.equals("Asteroid")) {
             //Asteroid hit by bullet, removes bullet and splits asteroid into two.
             world.removeEntity(entity1);
             splitAndRemoveAsteroid(entity2, world);
             return;
         }
-        if (entity1Type.equals("Asteroid") && entity2Type.equals("Bullet")) {
+        if (entity1Type.equals("Asteroid") && entity2Type.equals("EnemyBullet")) {
             //Asteroid hit by bullet, removes bullet and splits asteroid into two.
             world.removeEntity(entity2);
             splitAndRemoveAsteroid(entity1, world);
             return;
         }
-        if (entity1Type.equals("Bullet") && entity2Type.equals("Player")) {
+        if (entity1Type.equals("EnemyBullet") && entity2Type.equals("Player")) {
             //Player hit by bullet, and loses 1 hp per hit, health starts at 3
             world.removeEntity(entity1);
             damage(entity2, world);
             return;
         }
-        if (entity1Type.equals("Player") && entity2Type.equals("Bullet")) {
+        if (entity1Type.equals("Player") && entity2Type.equals("EnemyBullet")) {
             //Player hit by bullet, and loses 1 hp per hit, health starts at 3
             world.removeEntity(entity2);
             damage(entity1, world);
             return;
         }
-        if (entity1Type.equals("Bullet") && entity2Type.equals("Enemy")) {
+        if (entity1Type.equals("PlayerBullet") && entity2Type.equals("Enemy")) {
             //Enemy hit by bullet, and loses 1 hp per hit, health starts at 3
+            award(5);
             world.removeEntity(entity1);
             damage(entity2, world);
             return;
         }
-        if (entity1Type.equals("Enemy") && entity2Type.equals("Bullet")) {
+        if (entity1Type.equals("Enemy") && entity2Type.equals("PlayerBullet")) {
             //Enemy hit by bullet, and loses 1 hp per hit, health starts at 3
+            award(5);
             world.removeEntity(entity2);
             damage(entity1, world);
             return;
@@ -137,5 +155,9 @@ public class CollisionDetector implements IPostEntityProcessingService {
                 world.removeEntity(target);
             }
         }
+    }
+
+    private void award(int points) {
+        ScoringLocator.getService().awardPoints(points);
     }
 }

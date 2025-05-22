@@ -52,7 +52,6 @@
           <arguments>
             <argument>--module-path=mods-mvn</argument>
             <argument>--class-path=libs/*</argument>
-            <!--<argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=127.0.0.1:8000</argument>-->
             <argument>--module=Core/core.Main</argument>
             <argument>--add-modules=javafx.graphics</argument>
           </arguments>
@@ -132,5 +131,6 @@
     <module>Enemy</module>
     <module>Collisions</module>
     <module>Asteroids</module>
+    <module>ScoringSystem</module>
   </modules>
 </project>

@@ -16,7 +16,6 @@ public class AsteroidProcessor implements IEntityProcessingService {
         if (++framesSinceLastSpeedUp >= FRAMES_PER_SPEED_UP) {
             currentSpeed += 0.1;
             framesSinceLastSpeedUp = 0;
-            System.out.println("Asteroid speed increased to " + currentSpeed);
         }
 
         double w = gameData.getDisplayWidth();

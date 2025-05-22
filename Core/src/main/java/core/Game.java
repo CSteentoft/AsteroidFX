@@ -4,6 +4,7 @@ import common.data.Entity;
 import common.data.GameData;
 import common.data.GameKeys;
 import common.data.World;
+import common.scoringSystem.ScoringLocator;
 import common.services.IEntityProcessingService;
 import common.services.IGamePluginService;
 import common.services.IPostEntityProcessingService;
@@ -11,12 +12,12 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
@@ -34,6 +35,7 @@ class Game {
     private final List<IGamePluginService> gamePluginServices;
     private final List<IEntityProcessingService> entityProcessingServiceList;
     private final List<IPostEntityProcessingService> postEntityProcessingServices;
+    private Text scoreText;
 
     Game(List<IGamePluginService> gamePluginServices, List<IEntityProcessingService> entityProcessingServiceList, List<IPostEntityProcessingService> postEntityProcessingServices) {
         this.gamePluginServices = gamePluginServices;
@@ -42,9 +44,12 @@ class Game {
     }
 
     public void start(Stage window) throws Exception {
-        Text text = new Text(10, 20, "Destroyed asteroids: 0");
+        scoreText = new Text(10, 40, "Score: 0");
+        scoreText.setFill(Color.WHITE);
+        scoreText.setFont(Font.font("Monospace", FontWeight.BOLD, 18));
+        gameWindow.getChildren().add(scoreText);
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
-        gameWindow.getChildren().add(text);
+
 
         Image bgGif = new Image(getClass().getResource("/assets/images/space.gif").toExternalForm());
 
@@ -123,6 +128,8 @@ class Game {
     }
 
     private void draw() {
+        long pts = ScoringLocator.getService().getTotalPoints();
+        scoreText.setText("Score: " + pts);
 
         for (Entity polygonEntity : new ArrayList<>(polygons.keySet())) {
             if (!world.getEntities().contains(polygonEntity)) {
@@ -165,6 +172,7 @@ class Game {
             polygon.setTranslateX(entity.getX());
             polygon.setTranslateY(entity.getY());
             polygon.setRotate(entity.getRotation());
+
         }
     }
 

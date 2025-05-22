@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                        http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>AsteroidsFX</artifactId>
     <groupId>dk.sdu.cbse</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
+
   <groupId>dk.sdu.cbse</groupId>
   <artifactId>Core</artifactId>
   <version>1.0-SNAPSHOT</version>
@@ -16,12 +22,26 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
+    <spring.version>6.2.6</spring.version>
+    <micrometer.version>1.15.0</micrometer.version>
+    <jackson.version>2.15.2</jackson.version>
+
   </properties>
 
-  <repositories>
-  </repositories>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-framework-bom</artifactId>
+        <version>${spring.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
+    <!-- JavaFX -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
@@ -37,11 +57,21 @@
       <artifactId>javafx-base</artifactId>
       <version>21.0.2</version>
     </dependency>
+
+    <!-- Common game code -->
     <dependency>
       <groupId>dk.sdu.cbse</groupId>
       <artifactId>Common</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
+
+    <!-- Spring Web for RestTemplate -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+
+    <!-- Core parts of Spring (for ApplicationContext etc) -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
@@ -62,29 +92,93 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-expression</artifactId>
     </dependency>
+    <!-- spring-jcl comes transitively via spring-core, no need to list it twice -->
+
+    <!-- Micrometer Observation (for ObservationConvention) -->
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-jcl</artifactId>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-observation</artifactId>
+      <version>${micrometer.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-core</artifactId>
+      <version>${micrometer.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-commons</artifactId>
+      <version>${micrometer.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <!-- the missing piece -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
+      <!-- Copy all needed Spring & Micrometer modules onto mods-mvn -->
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.5.0</version>
         <executions>
           <execution>
-            <id>copy-dependencies</id>
+            <id>copy-dependencies-to-modpath</id>
             <phase>package</phase>
             <goals>
               <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-              <includeArtifactIds>javafx-controls,javafx-graphics,javafx-base,spring-context,spring-core,spring-beans,spring-aop,spring-expression,spring-jcl</includeArtifactIds>
-              <outputDirectory>../mods-mvn</outputDirectory>
+              <includeArtifactIds>
+                javafx-controls,
+                javafx-graphics,
+                javafx-base,
+                spring-web,
+                spring-context,
+                spring-core,
+                spring-beans,
+                spring-aop,
+                spring-expression,
+                micrometer-observation,
+                micrometer-core,
+                commons-logging,
+                micrometer-commons,
+                jackson-databind,
+                jackson-core,
+                jackson-annotations
+              </includeArtifactIds>
+              <outputDirectory>${project.parent.basedir}/mods-mvn</outputDirectory>
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <!-- Java compiler -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.10.1</version>
+        <configuration>
+          <fork>true</fork>
+        </configuration>
       </plugin>
     </plugins>
   </build>
